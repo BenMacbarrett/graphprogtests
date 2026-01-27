@@ -35,6 +35,7 @@ private:
     enum y_direction _y_direction;
     struct GLFWwindow* _window;
     GLuint _shaderProgram;
+    static void _framebuffer_size_callback( GLFWwindow* window, int width, int height );
     static void _keyboardCallback( GLFWwindow* window, int key, int scancode, int action, int mods );
     static void _prepareShaderProgram( GLuint& shaderProgram );
 };
