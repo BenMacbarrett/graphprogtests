@@ -5,11 +5,11 @@ Graphics::Graphics( const struct GraphicsConfiguration *config )
 {
     size_t i;
     SDL_AppResult ret = SDL_APP_SUCCESS; 
-    // bool initSuccess = SDL_SetAppMetadata( config->appName.data(), 
-    //                                config->appVersion.data(), 
-    //                                config->appID.data() );
-    // if( true == initSuccess ) 
-    // {        
+    bool initSuccess = SDL_SetAppMetadata( config->appName.data(), 
+                                   config->appVersion.data(), 
+                                   config->appID.data() );
+    if( true == initSuccess ) 
+    {
         bool initSuccess = SDL_Init( SDL_INIT_VIDEO );
         if( false == initSuccess )
         {
@@ -18,26 +18,27 @@ Graphics::Graphics( const struct GraphicsConfiguration *config )
         }
         else
         {
-            this->_window = SDL_CreateWindow( "Test window", config->width, config->height, 0 );
-            // initSuccess = SDL_CreateWindowAndRenderer( config->appTitle.data(), config->width, config->height, SDL_WINDOW_RESIZABLE, &this->_window, &this->_renderer );
-            if( NULL == this->_window )
+            // this->_window = SDL_CreateWindow( "Test window", config->width, config->height, 0 );
+            initSuccess = SDL_CreateWindowAndRenderer( config->appTitle.data(), config->width, config->height, SDL_WINDOW_RESIZABLE, &this->_window, &this->_renderer );
+            if( ( false == initSuccess ) ||
+                ( NULL == this->_window ) ||
+                ( NULL == this->_renderer ) )
             {
                 ret = SDL_APP_FAILURE;
             }
             else
             {
-                SDL_SetWindowFullscreen(this->_window, true);
+                SDL_SetRenderLogicalPresentation( this->_renderer, config->width, config->height, SDL_LOGICAL_PRESENTATION_LETTERBOX );
+                SDL_SetRenderDrawColor(this->_renderer, 75, 0, 0, 129);
+                SDL_RenderClear(this->_renderer);
+                SDL_RenderPresent(this->_renderer);
             }
-            // else
-            // {
-            //     SDL_SetRenderLogicalPresentation( this->_renderer, config->width, config->height, SDL_LOGICAL_PRESENTATION_LETTERBOX );
-            // }
         }
-    // }
-    // else
-    // {
-    //     ret = SDL_APP_FAILURE;
-    // }
+    }
+    else
+    {
+        ret = SDL_APP_FAILURE;
+    }
 
     if( SDL_APP_SUCCESS == ret )
     {
