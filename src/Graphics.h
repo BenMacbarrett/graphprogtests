@@ -49,6 +49,8 @@ class Graphics
         uint64_t lastTick;
         SDL_Window *_window;
         SDL_Renderer *_renderer;
+        int _width;
+        int _height;
         bool isInitialized;
         const struct GraphicsConfiguration *config;
 };

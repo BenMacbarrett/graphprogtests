@@ -44,6 +44,8 @@ Graphics::Graphics( const struct GraphicsConfiguration *config )
     {
 
         std::cout << "C spose marche" << std::endl;
+        this->_width = config->width;
+        this->_height = config->height;
         this->config = config;
         this->lastTick = SDL_GetTicks();
         this->isInitialized = true;
@@ -69,6 +71,13 @@ void Graphics::run( void )
                     running = false;
                 }
                 break;
+                case SDL_EVENT_WINDOW_RESIZED:
+                {
+                    this->_width = event.window.data1;
+                    this->_height = event.window.data2;
+                    std::cout << "w: " << this->_width << " h: " << this->_height << std::endl;
+                }
+                break;
                 default:
                 {
 
@@ -92,10 +101,10 @@ Graphics::~Graphics( void )
         SDL_DestroyWindow( this->_window );
     }
 
-    // if( NULL != this->_renderer )
-    // {
-    //     SDL_DestroyRenderer( this->_renderer );
-    // }
+    if( NULL != this->_renderer )
+    {
+        SDL_DestroyRenderer( this->_renderer );
+    }
 
     SDL_Quit();
 }
