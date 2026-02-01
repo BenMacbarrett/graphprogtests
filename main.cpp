@@ -1,58 +1,29 @@
+#include "SDL3/SDL.h"
+#include "SDL3/SDL_main.h"
 #include <iostream>
-#include "window.h"
+#include "Graphics.h"
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height); 
 
-int main( void ) 
+
+
+int main( int argc, char** argv )
 {
-    int return_code = 0;
+    const static GraphicsConfiguration graphicConfiguration( "This is my Test", "0.0.1", "com.das.test", "My Test", 800, 600 );
+    int ret = -1;
 
-    Window* window_instance = new Window( 800, 600, "OpenGL Window" );
-    if( window_instance == nullptr ) 
+    Graphics* appGraphics = new Graphics( &graphicConfiguration );
+    if( true == appGraphics->isGraphicsInitialized() )
     {
-        std::cerr << "Failed to create Window instance" << std::endl;
-        return_code = -1;
+
+        appGraphics->run();
+        delete appGraphics;
+
+        ret = 0;
     }
     else
     {
-        window_instance->run();
-        delete window_instance;
+        std::cout << "Error initializing SDL... " << std::endl;
     }
 
-    // glfwInit();
-    // glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    // glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    // GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
-    // if (window == NULL)
-    // {
-    //     std::cout << "Failed to create GLFW window" << std::endl;
-    //     glfwTerminate();
-    //     return -1;
-    // }
-
-    // glfwMakeContextCurrent(window);
-    // if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    // {
-    //     std::cout << "Failed to initialize GLAD" << std::endl;
-    //     return -1;
-    // }   
-
-    // glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-    // while(!glfwWindowShouldClose(window))
-    // {
-    //     glfwSwapBuffers(window);
-    //     glfwPollEvents();    
-    // }
-
-
-    // glfwTerminate();
-
-    return return_code;
+    return ret;
 }
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-    glViewport(0, 0, width, height);
-}  

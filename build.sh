@@ -2,4 +2,4 @@
 
 cmake -S . -B build
 cmake --build build
-./build/MyApp
+./build/Debug/MyGame
