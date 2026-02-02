@@ -1,5 +1,5 @@
 #include "Graphics.h"
-
+#include "SDL3_image/SDL_image.h"
 
 #define SQUARE_RATIO ( 0.01f )
 
@@ -30,12 +30,13 @@ Graphics::Graphics( const struct GraphicsConfiguration *config )
             }
             else
             {
-                this->_width = config->width;
-                this->_height = config->height;
-                // SDL_SetRenderLogicalPresentation( this->_renderer, config->width, config->height, SDL_LOGICAL_PRESENTATION_LETTERBOX );
-                SDL_SetRenderDrawColor(this->_renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-                SDL_RenderClear(this->_renderer);
-                SDL_RenderPresent(this->_renderer);
+                this->bonom = IMG_LoadTexture( this->_renderer, "/home/phil/graphp/graphprogtests/images/pixelart/run_192x144_6.png" );
+                this->bg = IMG_LoadTexture( this->_renderer, "/home/phil/graphp/graphprogtests/images/pixelart/dg.png" );
+                if( ( NULL == this->bonom ) ||
+                    ( NULL == this->bg ) )
+                {
+                    ret = SDL_APP_FAILURE;
+                }
             }
         }
     }
@@ -46,24 +47,20 @@ Graphics::Graphics( const struct GraphicsConfiguration *config )
 
     if( SDL_APP_SUCCESS == ret )
     {
-        SDL_FRect r;
         std::cout << "C spose marche" << std::endl;
         this->_width = config->width;
         this->_height = config->height;
         this->config = config;
         this->lastTick = SDL_GetTicks();
         this->isInitialized = true;
-        SDL_SetRenderDrawColor(this->_renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+
+        // SDL_SetRenderLogicalPresentation( this->_renderer, config->width, config->height, SDL_LOGICAL_PRESENTATION_LETTERBOX );
+
+        SDL_SetRenderDrawColor(this->_renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
         SDL_RenderClear(this->_renderer);
 
-        r.x = 288;
-        r.y = 288;
-        r.w = 24;
-        r.h = 24;
-        
-        SDL_SetRenderDrawColor(this->_renderer, 255, 255, 0, SDL_ALPHA_OPAQUE); /*head*/
-        bool ret = SDL_RenderFillRect(this->_renderer, &r);
-        std::cout << "w " << r.w << " h " << r.h << " x " << r.x << " y " << r.y << " suc " << ret << std::endl;
+        SDL_RenderTexture(this->_renderer, this->bonom, NULL, NULL);
+
         SDL_RenderPresent(this->_renderer);
 
     }
@@ -77,10 +74,28 @@ void Graphics::run( void )
 {
     static bool running = true;
     static SDL_FRect r;
+    static SDL_FRect rin =
+    {
+        .x = 0,
+        .y = 0,
+        .w = 192,
+        .h = 144,
+    };
     static float pos_x = 0.5f;
     static float pos_y = 0.5f;
+    static uint8_t runCount = 0;
+
+    bool flip = false;
+
+    uint8_t dir = 0;
+    uint64_t right_ts = SDL_GetTicks();
+    uint64_t left_ts = right_ts;
+    uint64_t runTick = right_ts;
+
     do
     {
+        uint64_t tick_now = SDL_GetTicks();
+
         SDL_Event event{ 0 };
         while( SDL_PollEvent( &event ) )
         {
@@ -97,6 +112,23 @@ void Graphics::run( void )
                     this->_height = event.window.data2;
                 }
                 break;
+                case SDL_EVENT_KEY_UP:
+                {
+                    switch( event.key.scancode )
+                    {
+                        case SDL_SCANCODE_D:
+                        {
+                            dir &= ~( 0x01 );
+                        }
+                        break;
+                        case SDL_SCANCODE_A:
+                        {
+                            dir &= ~( 0x02 );
+                        }
+                        break;
+                    }
+                }
+                break;
                 case SDL_EVENT_KEY_DOWN:
                 {
                     switch( event.key.scancode ) 
@@ -110,50 +142,20 @@ void Graphics::run( void )
                         break;
                         case SDL_SCANCODE_D:
                         {
-                            if( pos_x < 1.0f )
+                            if( false == ( dir & 0x01 ) )
                             {
-                                pos_x = pos_x + 0.01f;
-                                if( pos_x > 1.0f )
-                                {
-                                    pos_x = 1.0f;
-                                }
+                                right_ts = SDL_GetTicks();
                             }
-                        }
-                        break;
-                        case SDL_SCANCODE_W:
-                        {
-                            if( pos_y > 0.0f )
-                            {
-                                pos_y = pos_y - 0.01f;
-                                if( pos_y < 0.0f )
-                                {
-                                    pos_y = 0.0f;
-                                }
-                            }
+                            dir |= 0x01;
                         }
                         break;
                         case SDL_SCANCODE_A:
                         {
-                            if( pos_x > 0.0f )
+                            if( false == ( dir & 0x02 ) )
                             {
-                                pos_x = pos_x - 0.01f;
-                                if( pos_x < 0.0f )
-                                {
-                                    pos_x = 0.0f;
-                                }
+                                left_ts = SDL_GetTicks();
                             }
-                        }
-                        break;
-                        case SDL_SCANCODE_S:
-                        {
-                            if( pos_y < 1.0f )
-                            {
-                                pos_y = pos_y + 0.01f;
-                                if( pos_y > 1.0f )
-                                {
-                                    pos_y = 1.0f;
-                                }
-                            }
+                            dir |= 0x02;
                         }
                         break;
                         default:
@@ -172,18 +174,63 @@ void Graphics::run( void )
             }
         }
 
+        if( dir != 0 )
+        {
+            if( 35 <= ( tick_now - runTick ) )
+            {
+                runTick = tick_now;
+                if( right_ts > left_ts )
+                {
+                    flip = false;
+                    if( pos_x < 1.0f )
+                    {
+                        pos_x = pos_x + 0.01f;
+                        if( pos_x > 1.0f )
+                        {
+                            pos_x = 1.0f;
+                        }
+                    }
+                }
+                else
+                {
+                    flip = true;
+                    if( pos_x > 0.0f )
+                    {
+                        pos_x = pos_x - 0.01f;
+                        if( pos_x < 0.0f )
+                        {
+                            pos_x = 0.0f;
+                        }
+                    }
+                }
+            }
+
+
+            if( 100 <= ( tick_now - this->lastTick ) )
+            {
+                this->lastTick = tick_now;
+                runCount++;
+
+                if( 6 <= runCount )
+                {
+                    runCount = 0;
+                }
+            }
+        }
+                            
         SDL_SetRenderDrawColor(this->_renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
         SDL_RenderClear(this->_renderer);
         float square_size = this->_width * 0.01f;
-        r.x = ( float )( ( float )this->_width * pos_x ) - ( square_size / 2.0f );
-        r.y = ( float )( ( float )this->_height * pos_y ) - ( square_size / 2.0f );
-        r.w = square_size;
-        r.h = square_size;
+        r.x = ( float )( ( float )this->_width * pos_x );
+        r.y = 590;
+        r.w = 192.0f;
+        r.h = 144.0f;
         
-        SDL_SetRenderDrawColor(this->_renderer, 150, 23, 0, SDL_ALPHA_OPAQUE); /*head*/
-        bool ret = SDL_RenderFillRect(this->_renderer, &r);
-        std::cout << "w " << r.w << " h " << r.h << " x " << r.x << " y " << r.y << " suc " << ret << std::endl;
+        rin.x = 192.0f * ( float )runCount;
+        SDL_RenderTexture(this->_renderer, this->bg, NULL, NULL );
+        SDL_RenderTextureRotated(this->_renderer, this->bonom, &rin, &r, 0.0, NULL, ( true == flip ) ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE );
         SDL_RenderPresent(this->_renderer);
+        // SDL_RenderPresent(this->_renderer);
     } while( true == running );
 }
 
@@ -202,6 +249,16 @@ Graphics::~Graphics( void )
     if( NULL != this->_renderer )
     {
         SDL_DestroyRenderer( this->_renderer );
+    }
+
+    if( NULL != this->bonom )
+    {
+        SDL_DestroyTexture( this->bonom );
+    }
+
+   if( NULL != this->bg )
+    {
+        SDL_DestroyTexture( this->bg );
     }
 
     SDL_Quit();

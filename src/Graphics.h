@@ -2,6 +2,7 @@
 
 #include "SDL3/SDL.h"
 #include "SDL3/SDL_main.h"
+#include "SDL3_image/SDL_image.h"
 #include <string>
 #include <iostream>
 
@@ -52,6 +53,8 @@ class Graphics
         int _width;
         int _height;
         bool isInitialized;
+        SDL_Texture *bonom;
+        SDL_Texture *bg;
         const struct GraphicsConfiguration *config;
 };
 

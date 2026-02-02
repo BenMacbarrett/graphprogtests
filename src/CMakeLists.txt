@@ -1,21 +1,13 @@
 cmake_minimum_required( VERSION 3.16 )
 
-include(FetchContent)
-
-FetchContent_Declare(
-    stb
-    GIT_REPOSITORY https://github.com/nothings/stb.git
-    GIT_TAG master
-)
-
-FetchContent_MakeAvailable(stb)
-add_library(stb_image INTERFACE)
-target_include_directories(stb_image INTERFACE ${stb_SOURCE_DIR})
-
 project( Graphics )
 
 add_library( ${PROJECT_NAME} )
 
+find_package(SDL3 REQUIRED)
+find_package(SDL3_image REQUIRED)
+
 # Add your executable
 target_sources( ${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Graphics.cpp )
 target_include_directories( ${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} )
+target_link_libraries( ${PROJECT_NAME} PUBLIC SDL3::SDL3 SDL3_image::SDL3_image )
