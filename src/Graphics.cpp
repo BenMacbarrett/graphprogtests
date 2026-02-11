@@ -30,13 +30,22 @@ Graphics::Graphics( const struct GraphicsConfiguration *config )
             }
             else
             {
-                this->bonom = IMG_LoadTexture( this->_renderer, "/home/phil/graphp/graphprogtests/images/pixelart/run_192x144_6.png" );
-                this->bg = IMG_LoadTexture( this->_renderer, "/home/phil/graphp/graphprogtests/images/pixelart/dg.png" );
-                if( ( NULL == this->bonom ) ||
-                    ( NULL == this->bg ) )
+                char *basePath = SDL_GetBasePath();
+                if( NULL != basePath )
                 {
-                    ret = SDL_APP_FAILURE;
+
                 }
+                else
+                {
+                    this->bonom = IMG_LoadTexture( this->_renderer, "C:/msys64/home/Phil/graphprogtests/images/pixelart/run_192x144_6.png" );
+                    this->bg = IMG_LoadTexture( this->_renderer, "C:/msys64/home/Phil/graphprogtests/images/pixelart/dg.png" );
+                    if( ( NULL == this->bonom ) ||
+                        ( NULL == this->bg ) )
+                    {
+                        ret = SDL_APP_FAILURE;
+                    }
+                }
+
             }
         }
     }

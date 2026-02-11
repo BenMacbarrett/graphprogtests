@@ -4,8 +4,7 @@ project( Graphics )
 
 add_library( ${PROJECT_NAME} )
 
-find_package(SDL3 REQUIRED)
-find_package(SDL3_image REQUIRED)
+add_compile_definitions(SDL_MAIN_HANDLED)
 
 # Add your executable
 target_sources( ${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Graphics.cpp )
