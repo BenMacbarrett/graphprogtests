@@ -4,6 +4,3 @@
 [submodule "external/SDL_image"]
 	path = external/SDL_image
 	url = https://github.com/libsdl-org/SDL_image.git
-[submodule "external/tinytmx"]
-	path = external/tinytmx
-	url = https://github.com/KaseyJenkins/tinytmx.git
