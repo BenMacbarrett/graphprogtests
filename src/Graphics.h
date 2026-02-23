@@ -7,6 +7,7 @@
 #include "SDL3_image/SDL_image.h"
 #include <string>
 #include <iostream>
+#include "Control.h"
 
 struct graphic_metadata
 {
@@ -47,6 +48,7 @@ class Graphics
         void run( void );
 
     private:
+        Control _control;
         uint64_t lastTick;
         SDL_Window *_window;
         SDL_Renderer *_renderer;

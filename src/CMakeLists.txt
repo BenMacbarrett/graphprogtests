@@ -6,9 +6,11 @@ add_library( ${PROJECT_NAME} )
 
 find_package(SDL3 REQUIRED)
 find_package(SDL3_image REQUIRED)
-find_package(tinytmx REQUIRED)
+# find_package(tmxlite REQUIRED)
 
 # Add your executable
-target_sources( ${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Graphics.cpp )
+target_sources( ${PROJECT_NAME} 
+    PRIVATE 
+    ${CMAKE_CURRENT_SOURCE_DIR}/Graphics.cpp )
 target_include_directories( ${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} )
-target_link_libraries( ${PROJECT_NAME} PUBLIC SDL3::SDL3 SDL3_image::SDL3_image tinytmx::tinytmx)
+target_link_libraries( ${PROJECT_NAME} PUBLIC SDL3::SDL3 SDL3_image::SDL3_image tmxlite)

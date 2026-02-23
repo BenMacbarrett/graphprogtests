@@ -1,6 +1,7 @@
 #include "Graphics.h"
 #include "SDL3_image/SDL_image.h"
 
+
 #define SQUARE_RATIO ( 0.01f )
 
 Graphics::Graphics( const struct GraphicsConfiguration *config )
@@ -30,22 +31,13 @@ Graphics::Graphics( const struct GraphicsConfiguration *config )
             }
             else
             {
-                char *basePath = SDL_GetBasePath();
-                if( NULL != basePath )
+                this->bonom = IMG_LoadTexture( this->_renderer, "images/pixelart/Abigail.png" );
+                this->bg = IMG_LoadTexture( this->_renderer, "images/pixelart/dg.png" );
+                if( ( NULL == this->bonom ) ||
+                    ( NULL == this->bg ) )
                 {
-
+                    ret = SDL_APP_FAILURE;
                 }
-                else
-                {
-                    this->bonom = IMG_LoadTexture( this->_renderer, "C:/msys64/home/Phil/graphprogtests/images/pixelart/run_192x144_6.png" );
-                    this->bg = IMG_LoadTexture( this->_renderer, "C:/msys64/home/Phil/graphprogtests/images/pixelart/dg.png" );
-                    if( ( NULL == this->bonom ) ||
-                        ( NULL == this->bg ) )
-                    {
-                        ret = SDL_APP_FAILURE;
-                    }
-                }
-
             }
         }
     }
@@ -56,7 +48,7 @@ Graphics::Graphics( const struct GraphicsConfiguration *config )
 
     if( SDL_APP_SUCCESS == ret )
     {
-        std::cout << "C spose marche" << std::endl;
+        this->_control = Control();
         this->_width = config->width;
         this->_height = config->height;
         this->config = config;
@@ -86,20 +78,16 @@ void Graphics::run( void )
     static SDL_FRect rin =
     {
         .x = 0,
-        .y = 0,
-        .w = 192,
-        .h = 144,
+        .y = 33,
+        .w = 16,
+        .h = 32,
     };
     static float pos_x = 0.5f;
     static float pos_y = 0.5f;
     static uint8_t runCount = 0;
+    // bool flip = false;
 
-    bool flip = false;
-
-    uint8_t dir = 0;
-    uint64_t right_ts = SDL_GetTicks();
-    uint64_t left_ts = right_ts;
-    uint64_t runTick = right_ts;
+    uint64_t runTick = SDL_GetTicks();
 
     do
     {
@@ -125,14 +113,24 @@ void Graphics::run( void )
                 {
                     switch( event.key.scancode )
                     {
+                        case SDL_SCANCODE_W:
+                        {
+                            this->_control.update( ControlDirection::DIRECTION_UP, ControlStatus::CONTROL_STATUS_OFF );
+                        }
+                        break;
                         case SDL_SCANCODE_D:
                         {
-                            dir &= ~( 0x01 );
+                            this->_control.update( ControlDirection::DIRECTION_RIGHT, ControlStatus::CONTROL_STATUS_OFF );
                         }
                         break;
                         case SDL_SCANCODE_A:
                         {
-                            dir &= ~( 0x02 );
+                            this->_control.update( ControlDirection::DIRECTION_LEFT, ControlStatus::CONTROL_STATUS_OFF );
+                        }
+                        break;
+                        case SDL_SCANCODE_S:
+                        {
+                            this->_control.update( ControlDirection::DIRECTION_DOWN, ControlStatus::CONTROL_STATUS_OFF );
                         }
                         break;
                     }
@@ -149,22 +147,24 @@ void Graphics::run( void )
                             running = false;
                         }
                         break;
+                        case SDL_SCANCODE_W:
+                        {
+                            this->_control.update( ControlDirection::DIRECTION_UP, ControlStatus::CONTROL_STATUS_ON );
+                        }
+                        break;
                         case SDL_SCANCODE_D:
                         {
-                            if( false == ( dir & 0x01 ) )
-                            {
-                                right_ts = SDL_GetTicks();
-                            }
-                            dir |= 0x01;
+                            this->_control.update( ControlDirection::DIRECTION_RIGHT, ControlStatus::CONTROL_STATUS_ON );
                         }
                         break;
                         case SDL_SCANCODE_A:
                         {
-                            if( false == ( dir & 0x02 ) )
-                            {
-                                left_ts = SDL_GetTicks();
-                            }
-                            dir |= 0x02;
+                            this->_control.update( ControlDirection::DIRECTION_LEFT, ControlStatus::CONTROL_STATUS_ON );
+                        }
+                        break;
+                        case SDL_SCANCODE_S:
+                        {
+                            this->_control.update( ControlDirection::DIRECTION_DOWN, ControlStatus::CONTROL_STATUS_ON );
                         }
                         break;
                         default:
@@ -183,26 +183,17 @@ void Graphics::run( void )
             }
         }
 
-        if( dir != 0 )
+        ControlDirection direction_x = this->_control.getHorizontalDirection();
+        ControlDirection direction_y = this->_control.getVerticalDirection();
+        ControlDirection direction = ( ControlDirection::DIRECTION_NONE != direction_x ) ? direction_x : direction_y;
+        if( 55 <= ( tick_now - runTick ) )
         {
-            if( 35 <= ( tick_now - runTick ) )
+            runTick = tick_now;
+
+            if( ControlDirection::DIRECTION_NONE != direction_x )
             {
-                runTick = tick_now;
-                if( right_ts > left_ts )
+                if( ControlDirection::DIRECTION_LEFT == direction_x )
                 {
-                    flip = false;
-                    if( pos_x < 1.0f )
-                    {
-                        pos_x = pos_x + 0.01f;
-                        if( pos_x > 1.0f )
-                        {
-                            pos_x = 1.0f;
-                        }
-                    }
-                }
-                else
-                {
-                    flip = true;
                     if( pos_x > 0.0f )
                     {
                         pos_x = pos_x - 0.01f;
@@ -212,32 +203,100 @@ void Graphics::run( void )
                         }
                     }
                 }
+                else
+                {
+                    if( pos_x < 1.0f )
+                    {
+                        pos_x = pos_x + 0.01f;
+                        if( pos_x > 1.0f )
+                        {
+                            pos_x = 1.0f;
+                        }
+                    }
+                }
             }
 
-
-            if( 100 <= ( tick_now - this->lastTick ) )
+            if( ControlDirection::DIRECTION_NONE != direction_y )
             {
-                this->lastTick = tick_now;
-                runCount++;
-
-                if( 6 <= runCount )
+                if( ControlDirection::DIRECTION_UP == direction_y )
                 {
-                    runCount = 0;
+                    if( pos_y > 0.0f )
+                    {
+                        pos_y = pos_y - 0.005f;
+                        if( pos_y < 0.0f )
+                        {
+                            pos_y = 0.0f;
+                        }
+                    }
+                }
+                else
+                {
+                    if( pos_y < 1.0f )
+                    {
+                        pos_y = pos_y + 0.005f;
+                        if( pos_y > 1.0f )
+                        {
+                            pos_y = 1.0f;
+                        }
+                    }
                 }
             }
         }
-                            
+
+
+
+        uint64_t spriteUpdateTimeout = 150.0f;
+        if( spriteUpdateTimeout <= ( tick_now - this->lastTick ) )
+        {
+            this->lastTick = tick_now;
+            runCount++;
+
+            if( 4 <= runCount )
+            {
+                runCount = 0;
+            }
+        }
+
+        switch( direction )
+        {
+            case ControlDirection::DIRECTION_UP:
+            {
+                rin.y = ( ( 32.0f * ( float )2.0f ) + 1.0f );
+            }
+            break;
+            case ControlDirection::DIRECTION_RIGHT:
+            {
+                rin.y = ( ( 32.0f * ( float )1.0f ) + 1.0f );
+            }
+            break;
+            case ControlDirection::DIRECTION_LEFT:
+            {
+                rin.y = ( ( 32.0f * ( float )3.0f ) + 1.0f );
+            }
+            break;
+            case ControlDirection::DIRECTION_DOWN:
+            {
+                rin.y = ( ( 32.0f * ( float )0.0f ) + 1.0f );
+            }
+            break;
+            default:
+            {
+                runCount = 0;
+            }
+            break;
+        }
+    
         SDL_SetRenderDrawColor(this->_renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
         SDL_RenderClear(this->_renderer);
         float square_size = this->_width * 0.01f;
         r.x = ( float )( ( float )this->_width * pos_x );
-        r.y = 590;
-        r.w = 192.0f;
-        r.h = 144.0f;
+        r.y = ( float )( ( float )this->_height * pos_y );;
+        r.w = 4.0f * 8.0f;
+        r.h = 4.0f * 16.0f;
         
-        rin.x = 192.0f * ( float )runCount;
+        rin.x = 16.0f * ( float )runCount;
         SDL_RenderTexture(this->_renderer, this->bg, NULL, NULL );
-        SDL_RenderTextureRotated(this->_renderer, this->bonom, &rin, &r, 0.0, NULL, ( true == flip ) ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE );
+        SDL_RenderTextureRotated(this->_renderer, this->bonom, &rin, &r, 0.0, NULL, SDL_FLIP_NONE );
         SDL_RenderPresent(this->_renderer);
         // SDL_RenderPresent(this->_renderer);
     } while( true == running );
