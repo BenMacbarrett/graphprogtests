@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="20" height="12" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="8">
+ <properties>
+  <property name="DayTiles" value="Front 3 1 256 Front 3 2 288 Front 9 3 256 Front 9 4 288 Front 14 1 405 Front 15 1 406"/>
+  <property name="Doors" value="6 7 1 120"/>
+  <property name="NightTiles" value="Front 3 1 1253 Front 3 2 1285 Front 9 3 1253 Front 9 4 1285 Front 14 1 1220 Front 15 1 1221"/>
+  <property name="Warp" value="12 10 Town 72 69"/>
+ </properties>
+ <tileset firstgid="1" name="1" tilewidth="16" tileheight="16" tilecount="2176" columns="32">
+  <image source="../../../../.local/share/Steam/steamapps/common/Stardew Valley/Content/Maps/townInterior" width="512" height="1088"/>
+ </tileset>
+ <tileset firstgid="2177" name="p" tilewidth="16" tileheight="16" tilecount="64" columns="4">
+  <image source="../../../../.local/share/Steam/steamapps/common/Stardew Valley/Content/Maps/paths" width="64" height="256"/>
+ </tileset>
+ <tileset firstgid="2241" name="v15_townInterior_2" tilewidth="16" tileheight="16" tilecount="1312" columns="32">
+  <image source="../../../../.local/share/Steam/steamapps/common/Stardew Valley/Content/Maps/townInterior_2" width="512" height="656"/>
+ </tileset>
+ <layer id="1" name="Back" width="20" height="12">
+  <data encoding="base64" compression="zlib">
+   eJytksENwjAMRV1yhA1oaRYJ7RlWaBeAE/dOwCbshMQqOJK/cIITgVRLT65U+ekd0hBRszKnHdHZoDTzJgUD34VvrwalmdjRCpPywneP97w74WA0aG6UsogXvqNyaafuwU1kdES94N23b88ExsuOtGT3PJmBHUGI3w+yfaN4wCJdvUsZMvQ/7UMXdu4p+UDeF1Tba/u5DxUH+nzFV3uruqPEP77wg29N3ttxJlI=
+  </data>
+ </layer>
+ <objectgroup id="2" name="Back"/>
+ <layer id="3" name="Buildings" width="20" height="12">
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgYKQy3srJQBUAM88LiL2xYFwgEA3PRjMvC4iXMTEwZDNAcBKQncyE3aw5QCzFwsAgDcQyQCzLgmleFxAfA+o/DjWjCUg3I5mH7JY9QGwFNMMaiG2A2BaId0PlYOadxuGW2VD3RALlw4E4AoijsKi9DcSFSOZpIKm5xMXA0Apl74a6pxIoXw7EFUBchcU8e6AbHVgQ5nkgqfkENa8Sau8d7E5HAfFAsxKQzIOBVCAnjRFVjFjwgRFh3gY0A/ClVULyILwJqtARSDvhcR8jGo1LDS534FOLCwAAE10ieQ==
+  </data>
+ </layer>
+ <objectgroup id="4" name="Buildings">
+  <object id="1" name="TileData" x="32" y="64" width="16" height="16">
+   <properties>
+    <property name="Action" value="Message &quot;Trailer.1&quot;"/>
+   </properties>
+  </object>
+  <object id="2" name="TileData" x="80" y="64" width="16" height="16">
+   <properties>
+    <property name="Action" value="Message &quot;Trailer.2&quot;"/>
+   </properties>
+  </object>
+  <object id="3" name="TileData" x="96" y="64" width="16" height="16">
+   <properties>
+    <property name="Action" value="Message &quot;Trailer.3&quot;"/>
+   </properties>
+  </object>
+  <object id="4" name="TileData" x="160" y="96" width="16" height="16">
+   <properties>
+    <property name="Action" value="DropBox PamKitchen"/>
+   </properties>
+  </object>
+  <object id="5" name="TileData" x="96" y="112" width="16" height="16">
+   <properties>
+    <property name="Action" value="Door Penny"/>
+   </properties>
+  </object>
+  <object id="6" name="TileData" x="288" y="128" width="16" height="16">
+   <properties>
+    <property name="Action" value="Message &quot;Trailer.4&quot;"/>
+   </properties>
+  </object>
+  <object id="7" name="TileData" x="16" y="144" width="16" height="16">
+   <properties>
+    <property name="Action" value="Message &quot;Trailer.5&quot;"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer id="5" name="Front" width="20" height="12">
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgYAJiZij24oDQ3EDMw4AJuLCoRVanCMRaQOzIysDAyAihzYEWWABxFlA9UAgFO0LVTgNypkPVHwKKsUDNA8lf5YSazQihnYBmOQOxKxb3HMbiZhDQAWJVqHkgsASofzkTqhqQ+0Dyj4BYGCgnAsTWzJhmgcS+Qu3PBOpZzYSpBgRA/jgMdbcxUI0JEFvhUAsCrkjug4FNQA+mAmlL3NowgDww8BRYEP55yIiQYwLa3wqkI4H4BglmYnOfK9BcN0aIecQAByR3XGBEhB8MpAPFMoBYBMheBsWeHAj2Yqi6JUBsAEyghkBsxA2RWw7EK9Dc1w40qwNqDzYAU4tLHgQWAvEiJPfA7MEGEqFqmvGYR20AAJYiKX0=
+  </data>
+ </layer>
+ <objectgroup id="6" name="Front"/>
+ <layer id="7" name="Front2" width="20" height="12">
+  <properties>
+   <property name="Draw" value="Front"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYKA+2MJFXfOuUNk8GOhhoo25o4D2wImZgSGBkYGBaYTHIQB24QLV
+  </data>
+ </layer>
+ <objectgroup id="8" name="Front2"/>
+ <layer id="9" name="Front3" width="20" height="12">
+  <properties>
+   <property name="Draw" value="Front"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2DogWVQ7Mkx0C4ZWAAAqI8Bng==
+  </data>
+ </layer>
+ <objectgroup id="10" name="Front3"/>
+ <layer id="11" name="Paths" width="20" height="12">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFIx10cpAmPgoGDwAA7R8BIw==
+  </data>
+ </layer>
+ <objectgroup id="12" name="Paths"/>
+</map>

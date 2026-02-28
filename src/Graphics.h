@@ -7,7 +7,9 @@
 #include "SDL3_image/SDL_image.h"
 #include <string>
 #include <iostream>
-#include "Control.h"
+#include "DirectionMonitor.h"
+#include "Player.h"
+
 
 struct graphic_metadata
 {
@@ -48,15 +50,18 @@ class Graphics
         void run( void );
 
     private:
-        Control _control;
+        DirectionMonitor _directionMonitor;
+        Player _player;
         uint64_t lastTick;
         SDL_Window *_window;
         SDL_Renderer *_renderer;
         int _width;
         int _height;
         bool isInitialized;
+        bool running;
         SDL_Texture *bonom;
         SDL_Texture *bg;
         const struct GraphicsConfiguration *config;
+        void _HandleKeyboardCallback( const SDL_Scancode scancode, const bool isPressed );
 };
 

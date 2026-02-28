@@ -5,6 +5,8 @@
 #define SQUARE_RATIO ( 0.01f )
 
 Graphics::Graphics( const struct GraphicsConfiguration *config )
+    : _directionMonitor(),
+      _player( &_directionMonitor )
 {
     size_t i;
     SDL_AppResult ret = SDL_APP_SUCCESS; 
@@ -48,7 +50,6 @@ Graphics::Graphics( const struct GraphicsConfiguration *config )
 
     if( SDL_APP_SUCCESS == ret )
     {
-        this->_control = Control();
         this->_width = config->width;
         this->_height = config->height;
         this->config = config;
@@ -56,7 +57,6 @@ Graphics::Graphics( const struct GraphicsConfiguration *config )
         this->isInitialized = true;
 
         // SDL_SetRenderLogicalPresentation( this->_renderer, config->width, config->height, SDL_LOGICAL_PRESENTATION_LETTERBOX );
-
         SDL_SetRenderDrawColor(this->_renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
         SDL_RenderClear(this->_renderer);
 
@@ -73,7 +73,7 @@ Graphics::Graphics( const struct GraphicsConfiguration *config )
 
 void Graphics::run( void )
 {
-    static bool running = true;
+    this->running = true;
     static SDL_FRect r;
     static SDL_FRect rin =
     {
@@ -82,10 +82,10 @@ void Graphics::run( void )
         .w = 16,
         .h = 32,
     };
+    r.w = 3.0f * 16.0f;
+    r.h = 3.0f * 32.0f;
     static float pos_x = 0.5f;
     static float pos_y = 0.5f;
-    static uint8_t runCount = 0;
-    // bool flip = false;
 
     uint64_t runTick = SDL_GetTicks();
 
@@ -109,72 +109,11 @@ void Graphics::run( void )
                     this->_height = event.window.data2;
                 }
                 break;
+                case SDL_EVENT_KEY_DOWN:
                 case SDL_EVENT_KEY_UP:
                 {
-                    switch( event.key.scancode )
-                    {
-                        case SDL_SCANCODE_W:
-                        {
-                            this->_control.update( ControlDirection::DIRECTION_UP, ControlStatus::CONTROL_STATUS_OFF );
-                        }
-                        break;
-                        case SDL_SCANCODE_D:
-                        {
-                            this->_control.update( ControlDirection::DIRECTION_RIGHT, ControlStatus::CONTROL_STATUS_OFF );
-                        }
-                        break;
-                        case SDL_SCANCODE_A:
-                        {
-                            this->_control.update( ControlDirection::DIRECTION_LEFT, ControlStatus::CONTROL_STATUS_OFF );
-                        }
-                        break;
-                        case SDL_SCANCODE_S:
-                        {
-                            this->_control.update( ControlDirection::DIRECTION_DOWN, ControlStatus::CONTROL_STATUS_OFF );
-                        }
-                        break;
-                    }
+                    this->_HandleKeyboardCallback( event.key.scancode, ( SDL_EVENT_KEY_DOWN == event.type ) );
                 }
-                break;
-                case SDL_EVENT_KEY_DOWN:
-                {
-                    switch( event.key.scancode ) 
-                    {
-                    /* Quit. */
-                        case SDL_SCANCODE_ESCAPE:
-                        case SDL_SCANCODE_Q:
-                        {
-                            running = false;
-                        }
-                        break;
-                        case SDL_SCANCODE_W:
-                        {
-                            this->_control.update( ControlDirection::DIRECTION_UP, ControlStatus::CONTROL_STATUS_ON );
-                        }
-                        break;
-                        case SDL_SCANCODE_D:
-                        {
-                            this->_control.update( ControlDirection::DIRECTION_RIGHT, ControlStatus::CONTROL_STATUS_ON );
-                        }
-                        break;
-                        case SDL_SCANCODE_A:
-                        {
-                            this->_control.update( ControlDirection::DIRECTION_LEFT, ControlStatus::CONTROL_STATUS_ON );
-                        }
-                        break;
-                        case SDL_SCANCODE_S:
-                        {
-                            this->_control.update( ControlDirection::DIRECTION_DOWN, ControlStatus::CONTROL_STATUS_ON );
-                        }
-                        break;
-                        default:
-                        {
-
-                        }
-                        break;
-                    }
-                }
-                break;
                 default:
                 {
 
@@ -183,122 +122,20 @@ void Graphics::run( void )
             }
         }
 
-        ControlDirection direction_x = this->_control.getHorizontalDirection();
-        ControlDirection direction_y = this->_control.getVerticalDirection();
-        ControlDirection direction = ( ControlDirection::DIRECTION_NONE != direction_x ) ? direction_x : direction_y;
-        if( 55 <= ( tick_now - runTick ) )
-        {
-            runTick = tick_now;
-
-            if( ControlDirection::DIRECTION_NONE != direction_x )
-            {
-                if( ControlDirection::DIRECTION_LEFT == direction_x )
-                {
-                    if( pos_x > 0.0f )
-                    {
-                        pos_x = pos_x - 0.01f;
-                        if( pos_x < 0.0f )
-                        {
-                            pos_x = 0.0f;
-                        }
-                    }
-                }
-                else
-                {
-                    if( pos_x < 1.0f )
-                    {
-                        pos_x = pos_x + 0.01f;
-                        if( pos_x > 1.0f )
-                        {
-                            pos_x = 1.0f;
-                        }
-                    }
-                }
-            }
-
-            if( ControlDirection::DIRECTION_NONE != direction_y )
-            {
-                if( ControlDirection::DIRECTION_UP == direction_y )
-                {
-                    if( pos_y > 0.0f )
-                    {
-                        pos_y = pos_y - 0.005f;
-                        if( pos_y < 0.0f )
-                        {
-                            pos_y = 0.0f;
-                        }
-                    }
-                }
-                else
-                {
-                    if( pos_y < 1.0f )
-                    {
-                        pos_y = pos_y + 0.005f;
-                        if( pos_y > 1.0f )
-                        {
-                            pos_y = 1.0f;
-                        }
-                    }
-                }
-            }
-        }
-
-
-
-        uint64_t spriteUpdateTimeout = 150.0f;
-        if( spriteUpdateTimeout <= ( tick_now - this->lastTick ) )
-        {
-            this->lastTick = tick_now;
-            runCount++;
-
-            if( 4 <= runCount )
-            {
-                runCount = 0;
-            }
-        }
-
-        switch( direction )
-        {
-            case ControlDirection::DIRECTION_UP:
-            {
-                rin.y = ( ( 32.0f * ( float )2.0f ) + 1.0f );
-            }
-            break;
-            case ControlDirection::DIRECTION_RIGHT:
-            {
-                rin.y = ( ( 32.0f * ( float )1.0f ) + 1.0f );
-            }
-            break;
-            case ControlDirection::DIRECTION_LEFT:
-            {
-                rin.y = ( ( 32.0f * ( float )3.0f ) + 1.0f );
-            }
-            break;
-            case ControlDirection::DIRECTION_DOWN:
-            {
-                rin.y = ( ( 32.0f * ( float )0.0f ) + 1.0f );
-            }
-            break;
-            default:
-            {
-                runCount = 0;
-            }
-            break;
-        }
-    
         SDL_SetRenderDrawColor(this->_renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
         SDL_RenderClear(this->_renderer);
         float square_size = this->_width * 0.01f;
-        r.x = ( float )( ( float )this->_width * pos_x );
-        r.y = ( float )( ( float )this->_height * pos_y );;
-        r.w = 4.0f * 8.0f;
-        r.h = 4.0f * 16.0f;
         
-        rin.x = 16.0f * ( float )runCount;
+        rin = this->_player.getUpdatedPlayerData( tick_now );
+
+        this->_player.getPlayerPosition( &pos_x, &pos_y );
+        r.x = ( float )( ( float )this->_width * pos_x );
+        r.y = ( float )( ( float )this->_height * pos_y );
+
         SDL_RenderTexture(this->_renderer, this->bg, NULL, NULL );
         SDL_RenderTextureRotated(this->_renderer, this->bonom, &rin, &r, 0.0, NULL, SDL_FLIP_NONE );
         SDL_RenderPresent(this->_renderer);
-        // SDL_RenderPresent(this->_renderer);
+
     } while( true == running );
 }
 
@@ -330,4 +167,46 @@ Graphics::~Graphics( void )
     }
 
     SDL_Quit();
+}
+
+void Graphics::_HandleKeyboardCallback( const SDL_Scancode scancode, const bool isPressed )
+{
+    switch( scancode )
+    {
+        /* Quit. */
+        case SDL_SCANCODE_ESCAPE:
+        case SDL_SCANCODE_Q:
+        {
+            if( true == isPressed )
+            {
+                this->running = false;
+            }
+        }
+        break;
+        case SDL_SCANCODE_W:
+        {
+            this->_directionMonitor.update( Direction::DIRECTION_UP, isPressed );
+        }
+        break;
+        case SDL_SCANCODE_D:
+        {
+            this->_directionMonitor.update( Direction::DIRECTION_RIGHT, isPressed );
+        }
+        break;
+        case SDL_SCANCODE_A:
+        {
+            this->_directionMonitor.update( Direction::DIRECTION_LEFT, isPressed );
+        }
+        break;
+        case SDL_SCANCODE_S:
+        {
+            this->_directionMonitor.update( Direction::DIRECTION_DOWN, isPressed );
+        }
+        break;
+        default:
+        {
+
+        }
+        break;
+    }
 }
