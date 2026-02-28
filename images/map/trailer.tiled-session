@@ -1,0 +1,106 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "Trailer.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "file.lastUsedOpenFilter": "Tiled map files (*.tmx *.xml)",
+    "fileStates": {
+        "": {
+            "scaleInDock": 1
+        },
+        "/home/phil/.local/share/Steam/steamapps/common/Stardew Valley/Content/Maps/Trailer.tbin": {
+            "scale": 5.15671875,
+            "selectedLayer": 10,
+            "viewCenter": {
+                "x": 160.08241674999246,
+                "y": 96.0882344029331
+            }
+        },
+        "/home/phil/.local/share/Steam/steamapps/common/Stardew Valley/Content/Maps/Trailer.tbin#1": {
+            "scaleInDock": 1
+        },
+        "/home/phil/.local/share/Steam/steamapps/common/Stardew Valley/Content/Maps/Trailer.tbin#p": {
+            "scaleInDock": 1
+        },
+        "/home/phil/.local/share/Steam/steamapps/common/Stardew Valley/Content/Maps/Trailer.tbin#v15_townInterior_2": {
+            "scaleInDock": 1
+        },
+        "/home/phil/graphp/graphprogtests/external/tmxlite/SDL2Example/assets/demo.tmx": {
+            "scale": 1.0014583333333333,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 480.29956313709175,
+                "y": 256.12648221343875
+            }
+        },
+        "/home/phil/graphp/graphprogtests/external/tmxlite/SDL2Example/assets/demo.tmx#tileset": {
+            "scaleInDock": 1
+        },
+        "Trailer.tmx": {
+            "scale": 5.15671875,
+            "selectedLayer": 5,
+            "viewCenter": {
+                "x": 139.42974881071422,
+                "y": 96.0882344029331
+            }
+        },
+        "Trailer.tmx#1": {
+            "scaleInDock": 1
+        },
+        "Trailer.tmx#p": {
+            "scaleInDock": 1
+        },
+        "Trailer.tmx#v15_townInterior_2": {
+            "scaleInDock": 1
+        },
+        "paths.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "room_test.tmx": {
+            "scale": 2,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 310.25,
+                "y": 257.25
+            }
+        },
+        "townInterior.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "townInterior_2.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "last.exportedFilePath": "/home/phil/graphp/graphprogtests/images/map",
+    "last.imagePath": "/home/phil/graphp/graphprogtests/images/map",
+    "map.lastUsedExportFilter": "Tiled map files (*.tmx *.xml)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "openFiles": [
+        "Trailer.tmx",
+        "townInterior_2.tsx",
+        "townInterior.tsx",
+        "/home/phil/.local/share/Steam/steamapps/common/Stardew Valley/Content/Maps/Trailer.tbin"
+    ],
+    "project": "trailer.tiled-project",
+    "recentFiles": [
+        "/home/phil/.local/share/Steam/steamapps/common/Stardew Valley/Content/Maps/Trailer.tbin",
+        "townInterior.tsx",
+        "townInterior_2.tsx",
+        "Trailer.tmx",
+        "paths.tsx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
+}

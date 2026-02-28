@@ -15,6 +15,7 @@
  <tileset firstgid="2241" name="v15_townInterior_2" tilewidth="16" tileheight="16" tilecount="1312" columns="32">
   <image source="../../../../.local/share/Steam/steamapps/common/Stardew Valley/Content/Maps/townInterior_2" width="512" height="656"/>
  </tileset>
+ <tileset firstgid="3553" source="townInterior_2.tsx"/>
  <layer id="1" name="Back" width="20" height="12">
   <data encoding="base64" compression="zlib">
    eJytksENwjAMRV1yhA1oaRYJ7RlWaBeAE/dOwCbshMQqOJK/cIITgVRLT65U+ekd0hBRszKnHdHZoDTzJgUD34VvrwalmdjRCpPywneP97w74WA0aG6UsogXvqNyaafuwU1kdES94N23b88ExsuOtGT3PJmBHUGI3w+yfaN4wCJdvUsZMvQ/7UMXdu4p+UDeF1Tba/u5DxUH+nzFV3uruqPEP77wg29N3ttxJlI=

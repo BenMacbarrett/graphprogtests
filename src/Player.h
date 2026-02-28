@@ -2,6 +2,7 @@
 
 #include "SDL3/SDL.h"
 #include "DirectionMonitor.h"
+#include "Texture.hpp"
 
 #define PLAYER_SPRITE_DIRECTION_COUNT   ( ( uint8_t )4 )
 #define PLAYER_X_POS_TICK_UPDATE        ( ( uint64_t )55 )
@@ -15,31 +16,47 @@
 class Player
 {
     public:
-        Player( DirectionMonitor *directionMonitor ) : _directionMonitor( directionMonitor )
+        Player( DirectionMonitor &directionMonitor ) : 
+        _directionMonitor( directionMonitor ),
+        _texture()
         {
-            this->_playerSpriteData.h = PLAYER_SPRITE_Y_PIX;
-            this->_playerSpriteData.w = PLAYER_SPRITE_X_PIX;
-            this->_playerSpriteData.x = 0.0f;
-            this->_playerSpriteData.y = 0.0f;
+            _playerSpriteData.h = PLAYER_SPRITE_Y_PIX;
+            _playerSpriteData.w = PLAYER_SPRITE_X_PIX;
+            _playerSpriteData.x = 0.0f;
+            _playerSpriteData.y = 0.0f;
 
-            this->_postion_x = 0.0f;
-            this->_position_y = 0.0f;
+            _postion_x = 0.0f;
+            _position_y = 0.0f;
+
+            rout;
+            _playerSpriteData =
+            {
+                .x = 0,
+                .y = 33,
+                .w = 16,
+                .h = 32,
+            };
+            _playerTextureOutput.w = 16.0f;
+            _playerTextureOutput.h = 32.0f;
         }
 
         ~Player( void ){}
 
-        SDL_FRect getUpdatedPlayerData( const uint64_t tick )
+        void loadPlayer( SDL_Renderer* renderer )
         {
-            Direction direction_x = this->_directionMonitor->getHorizontalDirection();
-            Direction direction_y = this->_directionMonitor->getVerticalDirection();
+            _texture.loadFromFile( "images/pixelart/Abigail.png", renderer );
+        }
+
+        void udpate( const uint64_t tick )
+        {
+            Direction direction_x = _directionMonitor.getHorizontalDirection();
+            Direction direction_y = _directionMonitor.getVerticalDirection();
             Direction direction = ( Direction::DIRECTION_NONE != direction_x ) ? direction_x : direction_y;
 
-            this->_udpate_position_x( tick, direction_x );
-            this->_udpate_position_y( tick, direction_y );
-            this->_udpdateSpritePosition( direction );
-            this->_updateSpriteMotion( tick, ( Direction::DIRECTION_NONE != direction ) );
-
-            return this->_playerSpriteData;
+            _udpate_position_x( tick, direction_x );
+            _udpate_position_y( tick, direction_y );
+            _udpdateSpritePosition( direction );
+            _updateSpriteMotion( tick, ( Direction::DIRECTION_NONE != direction ) );
         }
 
         void getPlayerPosition( float *x, float *y )
@@ -47,9 +64,17 @@ class Player
             if( ( nullptr != x ) &&
                 ( nullptr != y) )
             {
-                *x = this->_postion_x;
-                *y = this->_position_y;
+                *x = _postion_x;
+                *y = _position_y;
             }
+        }
+
+        void draw( SDL_Renderer* renderer, float scale )
+        {
+            r
+            r.x = ( float )( ( float )_width * pos_x );
+            r.y = ( float )( ( float )_height * pos_y );
+            SDL_RenderTextureRotated(_renderer, bonom, &rin, &r, 0.0, NULL, SDL_FLIP_NONE );
         }
 
         // char * loadTexture( void )
@@ -59,8 +84,10 @@ class Player
 
         
     private:
-        DirectionMonitor *_directionMonitor;
+        Texture _texture;
+        DirectionMonitor &_directionMonitor;
         SDL_FRect _playerSpriteData;
+        SDL_FRect _playerTextureOutput;
 
         float _postion_x = 0.0f;
         float _position_y = 0.0f;
@@ -79,31 +106,31 @@ class Player
 
         void _udpate_position_x( const uint64_t tick, const Direction direction )
         {
-            if( PLAYER_X_POS_TICK_UPDATE <= ( tick - this->_postion_x_tick ) )
+            if( PLAYER_X_POS_TICK_UPDATE <= ( tick - _postion_x_tick ) )
             {
-                this->_postion_x_tick = tick;
+                _postion_x_tick = tick;
 
                 if( Direction::DIRECTION_NONE != direction )
                 {
                     if( Direction::DIRECTION_LEFT == direction )
                     {
-                        if( this->_postion_x > 0.0f )
+                        if( _postion_x > 0.0f )
                         {
-                            this->_postion_x = this->_postion_x - 0.01f;
-                            if( this->_postion_x < 0.0f )
+                            _postion_x = _postion_x - 0.005f;
+                            if( _postion_x < 0.0f )
                             {
-                                this->_postion_x = 0.0f;
+                                _postion_x = 0.0f;
                             }
                         }
                     }
                     else
                     {
-                        if( this->_postion_x < 1.0f )
+                        if( _postion_x < 1.0f )
                         {
-                            this->_postion_x = this->_postion_x + 0.01f;
-                            if( this->_postion_x > 1.0f )
+                            _postion_x = _postion_x + 0.01f;
+                            if( _postion_x > 1.0f )
                             {
-                                this->_postion_x = 1.0f;
+                                _postion_x = 1.0f;
                             }
                         }
                     }
@@ -113,31 +140,31 @@ class Player
 
         void _udpate_position_y( const uint64_t tick, const Direction direction )
         {
-            if( PLAYER_Y_POS_TICK_UPDATE <= ( tick - this->_postion_y_tick ) )
+            if( PLAYER_Y_POS_TICK_UPDATE <= ( tick - _postion_y_tick ) )
             {
-                this->_postion_y_tick = tick;
+                _postion_y_tick = tick;
 
                 if( Direction::DIRECTION_NONE != direction )
                 {
                     if( Direction::DIRECTION_UP == direction )
                     {
-                        if( this->_position_y > 0.0f )
+                        if( _position_y > 0.0f )
                         {
-                            this->_position_y = this->_position_y - 0.005f;
-                            if( this->_position_y < 0.0f )
+                            _position_y = _position_y - 0.005f;
+                            if( _position_y < 0.0f )
                             {
-                                this->_position_y = 0.0f;
+                                _position_y = 0.0f;
                             }
                         }
                     }
                     else
                     {
-                        if( this->_position_y < 1.0f )
+                        if( _position_y < 1.0f )
                         {
-                            this->_position_y = this->_position_y + 0.005f;
-                            if( this->_position_y > 1.0f )
+                            _position_y = _position_y + 0.005f;
+                            if( _position_y > 1.0f )
                             {
-                                this->_position_y = 1.0f;
+                                _position_y = 1.0f;
                             }
                         }
                     }
@@ -156,9 +183,9 @@ class Player
 
         void _udpdateSpritePosition( const Direction direction )
         {
-            if( true == this->_assert_position( direction ) )
+            if( true == _assert_position( direction ) )
             {
-                this->_playerSpriteData.y = this->_directionSpritePosition[ static_cast<int>(direction) ];
+                _playerSpriteData.y = _directionSpritePosition[ static_cast<int>(direction) ];
             }
         }
 
@@ -166,23 +193,23 @@ class Player
         {
             if( false == isInMovement )
             {
-                this->_motion_tick = tick - ( PLAYER_SPRITE_MOTION_PERIOD - 1 );
-                this->_motion = 0;
+                _motion_tick = tick - ( PLAYER_SPRITE_MOTION_PERIOD - 1 );
+                _motion = 0;
             }
-            else if( PLAYER_SPRITE_MOTION_PERIOD <= ( tick - this->_motion_tick ) )
+            else if( PLAYER_SPRITE_MOTION_PERIOD <= ( tick - _motion_tick ) )
             {
-                this->_motion_tick = tick;
-                this->_motion++;
+                _motion_tick = tick;
+                _motion++;
 
-                if( PLAYER_SPRITE_MOTION_COUNT <= this->_motion )
+                if( PLAYER_SPRITE_MOTION_COUNT <= _motion )
                 {
-                    this->_motion = 0;
+                    _motion = 0;
                 }
             }
             else
             {
             }
 
-            this->_playerSpriteData.x = PLAYER_SPRITE_X_PIX * ( float )this->_motion;
+            _playerSpriteData.x = PLAYER_SPRITE_X_PIX * ( float )_motion;
         }
 };

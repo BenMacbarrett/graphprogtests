@@ -18,8 +18,8 @@ class DirectionMonitor
     public:
         DirectionMonitor( void )
         {
-            this->_direction_y.clear();
-            this->_direction_x.clear();
+            _direction_y.clear();
+            _direction_x.clear();
         }
         ~DirectionMonitor( void ){}
 
@@ -32,14 +32,14 @@ class DirectionMonitor
                 {
                     if( true == status )
                     {
-                        this->_direction_y.push_front( direction );
+                        _direction_y.push_front( direction );
                     }
                     else
                     {
-                        this->_direction_y.remove( direction );                        
+                        _direction_y.remove( direction );                        
                     }
 
-                    this->_direction_y.unique();
+                    _direction_y.unique();
                 }
                 break;
                 case Direction::DIRECTION_LEFT:
@@ -47,14 +47,14 @@ class DirectionMonitor
                 {
                     if( true == status )
                     {
-                        this->_direction_x.push_front( direction );
+                        _direction_x.push_front( direction );
                     }
                     else
                     {
-                        this->_direction_x.remove( direction );                        
+                        _direction_x.remove( direction );                        
                     }
 
-                    this->_direction_x.unique();
+                    _direction_x.unique();
                 }
                 break;
                 default:
@@ -67,12 +67,12 @@ class DirectionMonitor
 
         Direction getVerticalDirection( void ) const
         {
-            return ( false == this->_direction_y.empty() ) ? this->_direction_y.front() : Direction::DIRECTION_NONE;
+            return ( false == _direction_y.empty() ) ? _direction_y.front() : Direction::DIRECTION_NONE;
         }
 
         Direction getHorizontalDirection( void ) const
         {
-            return ( false == this->_direction_x.empty() ) ? this->_direction_x.front() : Direction::DIRECTION_NONE;
+            return ( false == _direction_x.empty() ) ? _direction_x.front() : Direction::DIRECTION_NONE;
         }
 
     private:

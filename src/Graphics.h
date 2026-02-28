@@ -9,6 +9,7 @@
 #include <iostream>
 #include "DirectionMonitor.h"
 #include "Player.h"
+#include "MapRenderer.h"
 
 
 struct graphic_metadata
@@ -52,6 +53,7 @@ class Graphics
     private:
         DirectionMonitor _directionMonitor;
         Player _player;
+        MapRenderer _mapRenderer;
         uint64_t lastTick;
         SDL_Window *_window;
         SDL_Renderer *_renderer;
@@ -61,7 +63,9 @@ class Graphics
         bool running;
         SDL_Texture *bonom;
         SDL_Texture *bg;
+        tmx::Map map;
         const struct GraphicsConfiguration *config;
         void _HandleKeyboardCallback( const SDL_Scancode scancode, const bool isPressed );
+        void loadMap( void );
 };
 
